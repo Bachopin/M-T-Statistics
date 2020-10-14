@@ -1,0 +1,1249 @@
+#-----------------------------#
+###- M&T Statistics v1.1 -####
+#-----------------------------#
+
+namespace = statisticsevents
+
+country_event = { #[statisticsevents.1] Actual Yearly Income
+	id = statisticsevents.1
+	title = statisticsevents.1.t
+	desc = statisticsevents.1.d
+	picture = ADVISOR_eventPicture
+	
+	hidden = yes
+	is_triggered_only = yes
+	
+	immediate = {
+		capital_scope = { save_event_target_as = root_cap_province }
+		save_global_event_target_as = e_ipc_rank_1
+		save_global_event_target_as = e_ipc_rank_2
+		save_global_event_target_as = e_ipc_rank_3
+		save_global_event_target_as = e_ipc_rank_4
+		save_global_event_target_as = e_ipc_rank_5
+		save_global_event_target_as = e_ipc_rank_6
+		save_global_event_target_as = e_ipc_rank_7
+		save_global_event_target_as = e_ipc_rank_8
+		save_global_event_target_as = e_ipc_rank_9
+		save_global_event_target_as = e_ipc_rank_0
+		every_country = { #IpC calculation
+			limit = {
+				exists = yes
+				OR = {
+					check_variable = { which = country_total_pop		value = 200 }
+					ai = no
+				}
+			}
+			# Initialization
+			clr_country_flag = statistic_top
+			clr_country_flag = statistic_exclude
+			capital_scope = { save_event_target_as = cap_province }
+			set_variable = { 	which = actual_yearly_income	which = event_target:cap_province }
+			set_variable = { 	which = ipc_var					which = actual_yearly_income }
+			divide_variable = { which = ipc_var					which = country_total_pop }
+			
+			set_variable = { 		which = pop_millions		value = 0.01 }
+			multiply_variable = {	which = pop_millions		which = country_total_pop }
+			# log = "|P|statisticsevents.1 | Country = 						[This.GetName]| |P|!"
+			# log = "|T|statisticsevents.1 | ipc_var =						[This.ipc_var.GetValue]| |T|!"
+			# log = "|T|statisticsevents.1 | country_total_pop = 		[This.country_total_pop.GetValue]| |T|!"
+			# log = "|T|statisticsevents.1 | actual_yearly_income = 			[This.actual_yearly_income.GetValue]| |T|!"
+		}
+		event_target:root_cap_province = {
+			set_variable = { which = w_exit_var			value = 0 }
+			set_variable = { which = w_prev_max_var		value = 0 }
+			set_variable = { which = w_curr_max_var		value = 1 }
+			while = {
+				limit = { NOT = { check_variable = { which = w_exit_var	value = 10 } } }
+				every_country = {
+					limit = {
+						exists = yes
+						check_variable = { which = country_total_pop	value = 200 }
+						NOT = { has_country_flag = statistic_exclude }
+					}
+					event_target:root_cap_province = {
+						set_variable = { which = ipc_var			which = PREV }
+						set_variable = { which = w_curr_max_var		which = ipc_var }
+						if = {
+							limit = { check_variable = { which = w_curr_max_var	which = w_prev_max_var } }
+							if = { #it just werks
+								limit = { is_variable_equal = { which = w_curr_max_var which = w_prev_max_var } }
+								if = {
+									limit = { is_max_1 = yes }
+									event_target:e_ipc_rank_1 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_ipc_rank_1 }
+								}
+								else_if = {
+									limit = { is_max_2 = yes }
+									event_target:e_ipc_rank_2 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_ipc_rank_2 }
+								}
+								else_if = {
+									limit = { is_max_3 = yes }
+									event_target:e_ipc_rank_3 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_ipc_rank_3 }
+								}
+								else_if = {
+									limit = { is_max_4 = yes }
+									event_target:e_ipc_rank_4 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_ipc_rank_4 }
+								}
+								else_if = {
+									limit = { is_max_5 = yes }
+									event_target:e_ipc_rank_5 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_ipc_rank_5 }
+								}
+								else_if = {
+									limit = { is_max_6 = yes }
+									event_target:e_ipc_rank_6 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_ipc_rank_6 }
+								}
+								else_if = {
+									limit = { is_max_7 = yes }
+									event_target:e_ipc_rank_7 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_ipc_rank_7 }
+								}
+								else_if = {
+									limit = { is_max_8 = yes }
+									event_target:e_ipc_rank_8 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_ipc_rank_8 }
+								}
+								else_if = {
+									limit = { is_max_9 = yes }
+									event_target:e_ipc_rank_9 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_ipc_rank_9 }
+								}
+								else_if = {
+									limit = { is_max_10 = yes }
+									event_target:e_ipc_rank_0 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_ipc_rank_0 }
+								}
+								PREV = { set_country_flag = statistic_top }
+							}
+							PREV = {
+								if = {
+									limit = { has_country_flag = statistic_top }
+									# log = "|G|statisticsevents.1 | Max Country = 					[This.GetName]| |G|!"
+									# log = "|T|statisticsevents.1 | ipc_var =						[This.ipc_var.GetValue]| |T|!"
+									# log = "|T|statisticsevents.1 | country_total_pop = 		[This.country_total_pop.GetValue]| |T|!"
+									# log = "|T|statisticsevents.1 | actual_yearly_income = 			[This.actual_yearly_income.GetValue]| |T|!"
+									event_target:root_cap_province = { 
+										change_variable = { which = w_exit_var		value = 1 }
+										set_variable = { 	which = w_prev_max_var	value = 0 }
+									}
+									set_country_flag = statistic_exclude
+								}
+								else_if = {
+									limit = { NOT = { has_country_flag = statistic_top } }
+									set_country_flag = statistic_top
+									event_target:root_cap_province = { set_variable = { which = w_prev_max_var	which = w_curr_max_var } }
+									if = {
+										limit = { event_target:root_cap_province = { is_max_1 = yes } }
+										event_target:e_ipc_rank_1 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_ipc_rank_1
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_2 = yes } }
+										event_target:e_ipc_rank_2 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_ipc_rank_2
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_3 = yes } }
+										event_target:e_ipc_rank_3 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_ipc_rank_3
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_4 = yes } }
+										event_target:e_ipc_rank_4 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_ipc_rank_4
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_5 = yes } }
+										event_target:e_ipc_rank_5 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_ipc_rank_5
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_6 = yes } }
+										event_target:e_ipc_rank_6 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_ipc_rank_6
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_7 = yes } }
+										event_target:e_ipc_rank_7 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_ipc_rank_7
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_8 = yes } }
+										event_target:e_ipc_rank_8 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_ipc_rank_8
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_9 = yes } }
+										event_target:e_ipc_rank_9 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_ipc_rank_9
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_10 = yes } }
+										event_target:e_ipc_rank_0 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_ipc_rank_0
+									}
+									
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		# log = "|P| TOP: |#1 = [e_ipc_rank_1.GetName]| |#2 = [e_ipc_rank_2.GetName]| |#3 = [e_ipc_rank_3.GetName]| |#4 = [e_ipc_rank_4.GetName]| |#5 = [e_ipc_rank_5.GetName]| |P|!"
+		# log = "|P| TOP: |#6 = [e_ipc_rank_6.GetName]| |#7 = [e_ipc_rank_7.GetName]| |#8 = [e_ipc_rank_8.GetName]| |#9 = [e_ipc_rank_9.GetName]| |#10 = [e_ipc_rank_0.GetName]| |P|!"
+		# log = "|G| Player: [Root.GetName] |G|!"
+		# log = "|T| ipc_var =						[Root.ipc_var.GetValue]| |T|!"
+		# log = "|T| country_total_pop = 		[Root.country_total_pop.GetValue]| |T|!"
+		# log = "|T| actual_yearly_income = 			[Root.actual_yearly_income.GetValue]| |T|!"
+	}
+		
+	option = {
+		name = "statisticsevents.1.option.a"
+	}
+}
+
+#######################################################################
+############################## 人口 ###################################
+#######################################################################
+
+country_event = { #[statisticsevents.2] country total pop (ctp)
+	id = statisticsevents.2
+	title = statisticsevents.2.t
+	desc = statisticsevents.2.d
+	picture = ADVISOR_eventPicture
+	
+	hidden = yes
+	is_triggered_only = yes
+	
+	immediate = {
+		capital_scope = { save_event_target_as = root_cap_province }
+		save_global_event_target_as = e_ctp_rank_1
+		save_global_event_target_as = e_ctp_rank_2
+		save_global_event_target_as = e_ctp_rank_3
+		save_global_event_target_as = e_ctp_rank_4
+		save_global_event_target_as = e_ctp_rank_5
+		save_global_event_target_as = e_ctp_rank_6
+		save_global_event_target_as = e_ctp_rank_7
+		save_global_event_target_as = e_ctp_rank_8
+		save_global_event_target_as = e_ctp_rank_9
+		save_global_event_target_as = e_ctp_rank_0
+		every_country = { #ctp calculation
+			limit = {
+   				exists = yes 
+				OR = {
+					check_variable = { which = country_total_pop	value = 5 }
+					ai = no
+				}
+			}
+			# Initialization
+			clr_country_flag = statistic_top
+			clr_country_flag = statistic_exclude
+			capital_scope = { save_event_target_as = cap_province }
+			
+			set_variable = { 		which = pop_millions		value = 0.01 }
+			multiply_variable = {	which = pop_millions		which = country_total_pop }
+			# log = "|P|statisticsevents.2 | Country = 						[This.GetName]| |P|!"
+			# log = "|T|statisticsevents.2 | country_total_pop = 		[This.country_total_pop.GetValue]| |T|!"
+		}
+		event_target:root_cap_province = {
+			set_variable = { which = w_exit_var			value = 0 }
+			set_variable = { which = w_prev_max_var		value = 0 }
+			set_variable = { which = w_curr_max_var		value = 1 }
+			while = {
+				limit = { NOT = { check_variable = { which = w_exit_var	value = 10 } } }
+				every_country = {
+					limit = {
+						exists = yes 
+						check_variable = { which = country_total_pop	value = 5 }
+						NOT = { has_country_flag = statistic_exclude }
+					}
+					event_target:root_cap_province = {
+						set_variable = { which = pop_millions			which = PREV }
+						set_variable = { which = w_curr_max_var		which = pop_millions }
+						if = {
+							limit = { check_variable = { which = w_curr_max_var	which = w_prev_max_var } }
+							if = { #it just werks
+								limit = { is_variable_equal = { which = w_curr_max_var which = w_prev_max_var } }
+								if = {
+									limit = { is_max_1 = yes }
+									event_target:e_ctp_rank_1 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_ctp_rank_1 }
+								}
+								else_if = {
+									limit = { is_max_2 = yes }
+									event_target:e_ctp_rank_2 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_ctp_rank_2 }
+								}
+								else_if = {
+									limit = { is_max_3 = yes }
+									event_target:e_ctp_rank_3 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_ctp_rank_3 }
+								}
+								else_if = {
+									limit = { is_max_4 = yes }
+									event_target:e_ctp_rank_4 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_ctp_rank_4 }
+								}
+								else_if = {
+									limit = { is_max_5 = yes }
+									event_target:e_ctp_rank_5 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_ctp_rank_5 }
+								}
+								else_if = {
+									limit = { is_max_6 = yes }
+									event_target:e_ctp_rank_6 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_ctp_rank_6 }
+								}
+								else_if = {
+									limit = { is_max_7 = yes }
+									event_target:e_ctp_rank_7 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_ctp_rank_7 }
+								}
+								else_if = {
+									limit = { is_max_8 = yes }
+									event_target:e_ctp_rank_8 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_ctp_rank_8 }
+								}
+								else_if = {
+									limit = { is_max_9 = yes }
+									event_target:e_ctp_rank_9 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_ctp_rank_9 }
+								}
+								else_if = {
+									limit = { is_max_10 = yes }
+									event_target:e_ctp_rank_0 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_ctp_rank_0 }
+								}
+								PREV = { set_country_flag = statistic_top }
+							}
+							PREV = {
+								if = {
+									limit = { has_country_flag = statistic_top }
+									# log = "|G|statisticsevents.2 | Max Country = 					[This.GetName]| |G|!"
+									# log = "|T|statisticsevents.2 | country_total_pop = 		[This.country_total_pop.GetValue]| |T|!"
+									event_target:root_cap_province = { 
+										change_variable = { which = w_exit_var		value = 1 }
+										set_variable = { 	which = w_prev_max_var	value = 0 }
+									}
+									set_country_flag = statistic_exclude
+								}
+								else_if = {
+									limit = { NOT = { has_country_flag = statistic_top } }
+									set_country_flag = statistic_top
+									event_target:root_cap_province = { set_variable = { which = w_prev_max_var	which = w_curr_max_var } }
+									if = {
+										limit = { event_target:root_cap_province = { is_max_1 = yes } }
+										event_target:e_ctp_rank_1 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_ctp_rank_1
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_2 = yes } }
+										event_target:e_ctp_rank_2 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_ctp_rank_2
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_3 = yes } }
+										event_target:e_ctp_rank_3 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_ctp_rank_3
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_4 = yes } }
+										event_target:e_ctp_rank_4 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_ctp_rank_4
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_5 = yes } }
+										event_target:e_ctp_rank_5 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_ctp_rank_5
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_6 = yes } }
+										event_target:e_ctp_rank_6 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_ctp_rank_6
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_7 = yes } }
+										event_target:e_ctp_rank_7 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_ctp_rank_7
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_8 = yes } }
+										event_target:e_ctp_rank_8 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_ctp_rank_8
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_9 = yes } }
+										event_target:e_ctp_rank_9 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_ctp_rank_9
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_10 = yes } }
+										event_target:e_ctp_rank_0 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_ctp_rank_0
+									}
+									
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		# log = "|P| TOP: |#1 = [e_ctp_rank_1.GetName]| |#2 = [e_ctp_rank_2.GetName]| |#3 = [e_ctp_rank_3.GetName]| |#4 = [e_ctp_rank_4.GetName]| |#5 = [e_ctp_rank_5.GetName]| |P|!"
+		# log = "|P| TOP: |#6 = [e_ctp_rank_6.GetName]| |#7 = [e_ctp_rank_7.GetName]| |#8 = [e_ctp_rank_8.GetName]| |#9 = [e_ctp_rank_9.GetName]| |#10 = [e_ctp_rank_0.GetName]| |P|!"
+		# log = "|G| Player: [Root.GetName] |G|!"
+		# log = "|T| country_total_pop = 		[Root.country_total_pop.GetValue]| |T|!"
+	}
+		
+	option = {
+		name = "statisticsevents.2.option.a"
+	}
+}
+
+
+#######################################################################
+############################## 教育 ###################################
+#######################################################################
+
+country_event = { #[statisticsevents.3] education level
+	id = statisticsevents.3
+	title = statisticsevents.3.t
+	desc = statisticsevents.3.d
+	picture = ADVISOR_eventPicture
+	
+	hidden = yes
+	is_triggered_only = yes
+	
+	immediate = {
+		capital_scope = { save_event_target_as = root_cap_province }
+		save_global_event_target_as = e_edu_rank_1
+		save_global_event_target_as = e_edu_rank_2
+		save_global_event_target_as = e_edu_rank_3
+		save_global_event_target_as = e_edu_rank_4
+		save_global_event_target_as = e_edu_rank_5
+		save_global_event_target_as = e_edu_rank_6
+		save_global_event_target_as = e_edu_rank_7
+		save_global_event_target_as = e_edu_rank_8
+		save_global_event_target_as = e_edu_rank_9
+		save_global_event_target_as = e_edu_rank_0
+		every_country = { #初始化排除所有国家
+		    limit = { exists = yes }
+			set_country_flag = statistic_exclude
+			clr_country_flag = statistic_top
+		}
+		every_country = { # calculation
+			limit = {
+				exists = yes 
+				check_variable = { which = country_total_pop	value = 5 }
+				OR = {
+                    has_country_modifier = education_level_illiterate
+                    has_country_modifier = education_level_mediocre 
+                    has_country_modifier = education_level_poor 
+                    has_country_modifier = education_level_average 
+                    has_country_modifier = education_level_fair 
+                    has_country_modifier = education_level_good
+                    has_country_modifier = education_level_high
+                    has_country_modifier = education_level_exceptional
+                    has_country_modifier = education_level_enlightened
+					ai = no
+				}
+			}
+			# Initialization
+			clr_country_flag = statistic_top
+			clr_country_flag = statistic_exclude
+			capital_scope = { save_event_target_as = cap_province }
+
+			# log = "|P|statisticsevents.3 | Country = 						[This.GetName]| |P|!"
+			# log = "|T|statisticsevents.3 | education_level = 		[This.education_level.GetValue]| |T|!"
+		}
+		event_target:root_cap_province = {
+			set_variable = { which = w_exit_var			value = 0 }
+			set_variable = { which = w_prev_max_var		value = 0 }
+			set_variable = { which = w_curr_max_var		value = 1 }
+			while = {
+				limit = { NOT = { check_variable = { which = w_exit_var	value = 10 } } }
+				every_country = {
+					limit = {
+						exists = yes 
+   				        check_variable = { which = country_total_pop	value = 5 }
+						check_variable = { which = education_level	value = 15 }
+						NOT = { has_country_flag = statistic_exclude }
+					}
+					event_target:root_cap_province = {
+						set_variable = { which = education_level			which = PREV }
+						set_variable = { which = w_curr_max_var		which = education_level }
+						if = {
+							limit = { check_variable = { which = w_curr_max_var	which = w_prev_max_var } }
+							if = { #it just werks
+								limit = { is_variable_equal = { which = w_curr_max_var which = w_prev_max_var } }
+								if = {
+									limit = { is_max_1 = yes }
+									event_target:e_edu_rank_1 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_edu_rank_1 }
+								}
+								else_if = {
+									limit = { is_max_2 = yes }
+									event_target:e_edu_rank_2 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_edu_rank_2 }
+								}
+								else_if = {
+									limit = { is_max_3 = yes }
+									event_target:e_edu_rank_3 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_edu_rank_3 }
+								}
+								else_if = {
+									limit = { is_max_4 = yes }
+									event_target:e_edu_rank_4 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_edu_rank_4 }
+								}
+								else_if = {
+									limit = { is_max_5 = yes }
+									event_target:e_edu_rank_5 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_edu_rank_5 }
+								}
+								else_if = {
+									limit = { is_max_6 = yes }
+									event_target:e_edu_rank_6 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_edu_rank_6 }
+								}
+								else_if = {
+									limit = { is_max_7 = yes }
+									event_target:e_edu_rank_7 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_edu_rank_7 }
+								}
+								else_if = {
+									limit = { is_max_8 = yes }
+									event_target:e_edu_rank_8 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_edu_rank_8 }
+								}
+								else_if = {
+									limit = { is_max_9 = yes }
+									event_target:e_edu_rank_9 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_edu_rank_9 }
+								}
+								else_if = {
+									limit = { is_max_10 = yes }
+									event_target:e_edu_rank_0 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_edu_rank_0 }
+								}
+								PREV = { set_country_flag = statistic_top }
+							}
+							PREV = {
+								if = {
+									limit = { has_country_flag = statistic_top }
+									# log = "|G|statisticsevents.3 | Max Country = 					[This.GetName]| |G|!"
+									# log = "|T|statisticsevents.3 | education_level =						[This.education_level.GetValue]| |T|!"
+									# log = "|T|statisticsevents.3 | country_total_pop = 		[This.country_total_pop.GetValue]| |T|!"
+									event_target:root_cap_province = { 
+										change_variable = { which = w_exit_var		value = 1 }
+										set_variable = { 	which = w_prev_max_var	value = 0 }
+									}
+									set_country_flag = statistic_exclude
+								}
+								else_if = {
+									limit = { NOT = { has_country_flag = statistic_top } }
+									set_country_flag = statistic_top
+									event_target:root_cap_province = { set_variable = { which = w_prev_max_var	which = w_curr_max_var } }
+									if = {
+										limit = { event_target:root_cap_province = { is_max_1 = yes } }
+										event_target:e_edu_rank_1 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_edu_rank_1
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_2 = yes } }
+										event_target:e_edu_rank_2 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_edu_rank_2
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_3 = yes } }
+										event_target:e_edu_rank_3 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_edu_rank_3
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_4 = yes } }
+										event_target:e_edu_rank_4 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_edu_rank_4
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_5 = yes } }
+										event_target:e_edu_rank_5 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_edu_rank_5
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_6 = yes } }
+										event_target:e_edu_rank_6 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_edu_rank_6
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_7 = yes } }
+										event_target:e_edu_rank_7 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_edu_rank_7
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_8 = yes } }
+										event_target:e_edu_rank_8 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_edu_rank_8
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_9 = yes } }
+										event_target:e_edu_rank_9 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_edu_rank_9
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_10 = yes } }
+										event_target:e_edu_rank_0 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_edu_rank_0
+									}
+									
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		# log = "|P| TOP: |#1 = [e_edu_rank_1.GetName]| |#2 = [e_edu_rank_2.GetName]| |#3 = [e_edu_rank_3.GetName]| |#4 = [e_edu_rank_4.GetName]| |#5 = [e_edu_rank_5.GetName]| |P|!"
+		# log = "|P| TOP: |#6 = [e_edu_rank_6.GetName]| |#7 = [e_edu_rank_7.GetName]| |#8 = [e_edu_rank_8.GetName]| |#9 = [e_edu_rank_9.GetName]| |#10 = [e_edu_rank_0.GetName]| |P|!"
+		# log = "|G| Player: [Root.GetName] |G|!"
+		# log = "|T| education_level =						[Root.education_level.GetValue]| |T|!"
+		# log = "|T| country_total_pop = 		[Root.country_total_pop.GetValue]| |T|!"
+	}
+		
+	option = {
+		name = "statisticsevents.3.option.a"
+	}
+}
+
+#######################################################################
+############################## 宫廷 ###################################
+#######################################################################
+
+country_event = { #[statisticsevents.4] court level
+	id = statisticsevents.4
+	title = statisticsevents.4.t
+	desc = statisticsevents.4.d
+	picture = ADVISOR_eventPicture
+	
+	hidden = yes
+	is_triggered_only = yes
+	
+	immediate = {
+		capital_scope = { save_event_target_as = root_cap_province }
+		save_global_event_target_as = e_court_rank_1
+		save_global_event_target_as = e_court_rank_2
+		save_global_event_target_as = e_court_rank_3
+		save_global_event_target_as = e_court_rank_4
+		save_global_event_target_as = e_court_rank_5
+		save_global_event_target_as = e_court_rank_6
+		save_global_event_target_as = e_court_rank_7
+		save_global_event_target_as = e_court_rank_8
+		save_global_event_target_as = e_court_rank_9
+		save_global_event_target_as = e_court_rank_0
+		every_country = { #初始化排除所有国家
+		    limit = { exists = yes }
+			set_country_flag = statistic_exclude
+			clr_country_flag = statistic_top
+		}
+		every_country = { # calculation
+			limit = {
+				exists = yes 
+   				check_variable = { which = country_total_pop	value = 5 }
+				OR = {
+					has_country_modifier = court_level_1
+					has_country_modifier = court_level_2
+					has_country_modifier = court_level_3
+					has_country_modifier = court_level_4
+					has_country_modifier = court_level_5
+					has_country_modifier = court_level_6
+					ai = no
+				}
+			}
+			# Initialization
+			clr_country_flag = statistic_top
+			clr_country_flag = statistic_exclude
+			capital_scope = { save_event_target_as = cap_province }
+
+			# log = "|P|statisticsevents.4 | Country = 						[This.GetName]| |P|!"
+			# log = "|T|statisticsevents.4 | court_level = 		[This.court_level.GetValue]| |T|!"
+		}
+		event_target:root_cap_province = {
+			set_variable = { which = w_exit_var			value = 0 }
+			set_variable = { which = w_prev_max_var		value = 0 }
+			set_variable = { which = w_curr_max_var		value = 1 }
+			while = {
+				limit = { NOT = { check_variable = { which = w_exit_var	value = 10 } } }
+				every_country = {
+					limit = {
+						exists = yes 
+   				        check_variable = { which = country_total_pop	value = 5 }
+						check_variable = { which = court_level	value = 15 }
+						NOT = { has_country_flag = statistic_exclude }
+					}
+					event_target:root_cap_province = {
+						set_variable = { which = court_level			which = PREV }
+						set_variable = { which = w_curr_max_var		which = court_level }
+						if = {
+							limit = { check_variable = { which = w_curr_max_var	which = w_prev_max_var } }
+							if = { #it just werks
+								limit = { is_variable_equal = { which = w_curr_max_var which = w_prev_max_var } }
+								if = {
+									limit = { is_max_1 = yes }
+									event_target:e_court_rank_1 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_court_rank_1 }
+								}
+								else_if = {
+									limit = { is_max_2 = yes }
+									event_target:e_court_rank_2 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_court_rank_2 }
+								}
+								else_if = {
+									limit = { is_max_3 = yes }
+									event_target:e_court_rank_3 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_court_rank_3 }
+								}
+								else_if = {
+									limit = { is_max_4 = yes }
+									event_target:e_court_rank_4 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_court_rank_4 }
+								}
+								else_if = {
+									limit = { is_max_5 = yes }
+									event_target:e_court_rank_5 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_court_rank_5 }
+								}
+								else_if = {
+									limit = { is_max_6 = yes }
+									event_target:e_court_rank_6 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_court_rank_6 }
+								}
+								else_if = {
+									limit = { is_max_7 = yes }
+									event_target:e_court_rank_7 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_court_rank_7 }
+								}
+								else_if = {
+									limit = { is_max_8 = yes }
+									event_target:e_court_rank_8 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_court_rank_8 }
+								}
+								else_if = {
+									limit = { is_max_9 = yes }
+									event_target:e_court_rank_9 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_court_rank_9 }
+								}
+								else_if = {
+									limit = { is_max_10 = yes }
+									event_target:e_court_rank_0 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_court_rank_0 }
+								}
+								PREV = { set_country_flag = statistic_top }
+							}
+							PREV = {
+								if = {
+									limit = { has_country_flag = statistic_top }
+									# log = "|G|statisticsevents.4 | Max Country = 					[This.GetName]| |G|!"
+									# log = "|T|statisticsevents.4 | court_level =						[This.court_level.GetValue]| |T|!"
+									# log = "|T|statisticsevents.4 | country_total_pop = 		[This.country_total_pop.GetValue]| |T|!"
+									event_target:root_cap_province = { 
+										change_variable = { which = w_exit_var		value = 1 }
+										set_variable = { 	which = w_prev_max_var	value = 0 }
+									}
+									set_country_flag = statistic_exclude
+								}
+								else_if = {
+									limit = { NOT = { has_country_flag = statistic_top } }
+									set_country_flag = statistic_top
+									event_target:root_cap_province = { set_variable = { which = w_prev_max_var	which = w_curr_max_var } }
+									if = {
+										limit = { event_target:root_cap_province = { is_max_1 = yes } }
+										event_target:e_court_rank_1 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_court_rank_1
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_2 = yes } }
+										event_target:e_court_rank_2 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_court_rank_2
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_3 = yes } }
+										event_target:e_court_rank_3 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_court_rank_3
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_4 = yes } }
+										event_target:e_court_rank_4 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_court_rank_4
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_5 = yes } }
+										event_target:e_court_rank_5 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_court_rank_5
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_6 = yes } }
+										event_target:e_court_rank_6 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_court_rank_6
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_7 = yes } }
+										event_target:e_court_rank_7 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_court_rank_7
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_8 = yes } }
+										event_target:e_court_rank_8 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_court_rank_8
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_9 = yes } }
+										event_target:e_court_rank_9 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_court_rank_9
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_10 = yes } }
+										event_target:e_court_rank_0 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_court_rank_0
+									}
+									
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		# log = "|P| TOP: |#1 = [e_court_rank_1.GetName]| |#2 = [e_court_rank_2.GetName]| |#3 = [e_court_rank_3.GetName]| |#4 = [e_court_rank_4.GetName]| |#5 = [e_court_rank_5.GetName]| |P|!"
+		# log = "|P| TOP: |#6 = [e_court_rank_6.GetName]| |#7 = [e_court_rank_7.GetName]| |#8 = [e_court_rank_8.GetName]| |#9 = [e_court_rank_9.GetName]| |#10 = [e_court_rank_0.GetName]| |P|!"
+		# log = "|G| Player: [Root.GetName] |G|!"
+		# log = "|T| court_level =						[Root.court_level.GetValue]| |T|!"
+		# log = "|T| country_total_pop = 		[Root.country_total_pop.GetValue]| |T|!"
+	}
+		
+	option = {
+		name = "statisticsevents.4.option.a"
+	}
+}
+
+#######################################################################
+############################## 艺术 ###################################
+#######################################################################
+
+country_event = { #[statisticsevents.5] art power
+	id = statisticsevents.5
+	title = statisticsevents.5.t
+	desc = statisticsevents.5.d
+	picture = ADVISOR_eventPicture
+	
+	hidden = yes
+	is_triggered_only = yes
+	
+	immediate = {
+		capital_scope = { save_event_target_as = root_cap_province }
+		save_global_event_target_as = e_art_rank_1
+		save_global_event_target_as = e_art_rank_2
+		save_global_event_target_as = e_art_rank_3
+		save_global_event_target_as = e_art_rank_4
+		save_global_event_target_as = e_art_rank_5
+		save_global_event_target_as = e_art_rank_6
+		save_global_event_target_as = e_art_rank_7
+		save_global_event_target_as = e_art_rank_8
+		save_global_event_target_as = e_art_rank_9
+		save_global_event_target_as = e_art_rank_0
+		every_country = { #初始化排除所有国家
+		    limit = { exists = yes }
+			set_country_flag = statistic_exclude
+			clr_country_flag = statistic_top
+		}
+		every_country = { #calculation
+			limit = {
+				exists = yes 
+   				check_variable = { which = country_total_pop	value = 5 }
+				OR = {
+					has_country_modifier = art_level_1
+					has_country_modifier = art_level_2
+					has_country_modifier = art_level_3
+					has_country_modifier = art_level_4
+					has_country_modifier = art_level_5
+					ai = no
+				}
+			}
+			# Initialization
+			clr_country_flag = statistic_top
+			clr_country_flag = statistic_exclude
+			# log = "|P|statisticsevents.5 | Country = 						[This.GetName]| |P|!"
+			# log = "|T|statisticsevents.5 | art_power_disp = 		[This.art_power_disp.GetValue]| |T|!"
+		}
+		event_target:root_cap_province = {
+			set_variable = { which = w_exit_var			value = 0 }
+			set_variable = { which = w_prev_max_var		value = 0 }
+			set_variable = { which = w_curr_max_var		value = 1 }
+			while = {
+				limit = { NOT = { check_variable = { which = w_exit_var	value = 10 } } }
+				every_country = {
+					limit = {
+						exists = yes 
+   				        check_variable = { which = country_total_pop	value = 5 }
+						check_variable = { which = art_power_disp	value = 5 }
+						NOT = { has_country_flag = statistic_exclude }
+					}
+					event_target:root_cap_province = {
+						set_variable = { which = art_power_disp			which = PREV }
+						set_variable = { which = w_curr_max_var		which = art_power_disp }
+						if = {
+							limit = { check_variable = { which = w_curr_max_var	which = w_prev_max_var } }
+							if = { #it just werks
+								limit = { is_variable_equal = { which = w_curr_max_var which = w_prev_max_var } }
+								if = {
+									limit = { is_max_1 = yes }
+									event_target:e_art_rank_1 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_art_rank_1 }
+								}
+								else_if = {
+									limit = { is_max_2 = yes }
+									event_target:e_art_rank_2 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_art_rank_2 }
+								}
+								else_if = {
+									limit = { is_max_3 = yes }
+									event_target:e_art_rank_3 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_art_rank_3 }
+								}
+								else_if = {
+									limit = { is_max_4 = yes }
+									event_target:e_art_rank_4 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_art_rank_4 }
+								}
+								else_if = {
+									limit = { is_max_5 = yes }
+									event_target:e_art_rank_5 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_art_rank_5 }
+								}
+								else_if = {
+									limit = { is_max_6 = yes }
+									event_target:e_art_rank_6 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_art_rank_6 }
+								}
+								else_if = {
+									limit = { is_max_7 = yes }
+									event_target:e_art_rank_7 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_art_rank_7 }
+								}
+								else_if = {
+									limit = { is_max_8 = yes }
+									event_target:e_art_rank_8 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_art_rank_8 }
+								}
+								else_if = {
+									limit = { is_max_9 = yes }
+									event_target:e_art_rank_9 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_art_rank_9 }
+								}
+								else_if = {
+									limit = { is_max_10 = yes }
+									event_target:e_art_rank_0 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_art_rank_0 }
+								}
+								PREV = { set_country_flag = statistic_top }
+							}
+							PREV = {
+								if = {
+									limit = { has_country_flag = statistic_top }
+									# log = "|G|statisticsevents.5 | Max Country = 					[This.GetName]| |G|!"
+									# log = "|T|statisticsevents.5 | art_power_disp =						[This.art_power_disp.GetValue]| |T|!"
+									# log = "|T|statisticsevents.5 | country_total_pop = 		[This.country_total_pop.GetValue]| |T|!"
+									event_target:root_cap_province = { 
+										change_variable = { which = w_exit_var		value = 1 }
+										set_variable = { 	which = w_prev_max_var	value = 0 }
+									}
+									set_country_flag = statistic_exclude
+								}
+								else_if = {
+									limit = { NOT = { has_country_flag = statistic_top } }
+									set_country_flag = statistic_top
+									event_target:root_cap_province = { set_variable = { which = w_prev_max_var	which = w_curr_max_var } }
+									if = {
+										limit = { event_target:root_cap_province = { is_max_1 = yes } }
+										event_target:e_art_rank_1 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_art_rank_1
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_2 = yes } }
+										event_target:e_art_rank_2 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_art_rank_2
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_3 = yes } }
+										event_target:e_art_rank_3 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_art_rank_3
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_4 = yes } }
+										event_target:e_art_rank_4 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_art_rank_4
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_5 = yes } }
+										event_target:e_art_rank_5 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_art_rank_5
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_6 = yes } }
+										event_target:e_art_rank_6 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_art_rank_6
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_7 = yes } }
+										event_target:e_art_rank_7 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_art_rank_7
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_8 = yes } }
+										event_target:e_art_rank_8 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_art_rank_8
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_9 = yes } }
+										event_target:e_art_rank_9 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_art_rank_9
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_10 = yes } }
+										event_target:e_art_rank_0 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_art_rank_0
+									}
+									
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		# log = "|P| TOP: |#1 = [e_art_rank_1.GetName]| |#2 = [e_art_rank_2.GetName]| |#3 = [e_art_rank_3.GetName]| |#4 = [e_art_rank_4.GetName]| |#5 = [e_art_rank_5.GetName]| |P|!"
+		# log = "|P| TOP: |#6 = [e_art_rank_6.GetName]| |#7 = [e_art_rank_7.GetName]| |#8 = [e_art_rank_8.GetName]| |#9 = [e_art_rank_9.GetName]| |#10 = [e_art_rank_0.GetName]| |P|!"
+		# log = "|G| Player: [Root.GetName] |G|!"
+		# log = "|T| art_power_disp =						[Root.art_power_disp.GetValue]| |T|!"
+		# log = "|T| country_total_pop = 		[Root.country_total_pop.GetValue]| |T|!"
+	}
+		
+	option = {
+		name = "statisticsevents.5.option.a"
+	}
+}
+
+#######################################################################
+############################## 城市化率 ###################################
+#######################################################################
+
+country_event = { #[statisticsevents.6] country percent urbanized
+	id = statisticsevents.6
+	title = statisticsevents.6.t
+	desc = statisticsevents.6.d
+	picture = ADVISOR_eventPicture
+	
+	hidden = yes
+	is_triggered_only = yes
+	
+	immediate = {
+		capital_scope = { save_event_target_as = root_cap_province }
+		save_global_event_target_as = e_urban_rank_1
+		save_global_event_target_as = e_urban_rank_2
+		save_global_event_target_as = e_urban_rank_3
+		save_global_event_target_as = e_urban_rank_4
+		save_global_event_target_as = e_urban_rank_5
+		save_global_event_target_as = e_urban_rank_6
+		save_global_event_target_as = e_urban_rank_7
+		save_global_event_target_as = e_urban_rank_8
+		save_global_event_target_as = e_urban_rank_9
+		save_global_event_target_as = e_urban_rank_0
+		every_country = { #初始化排除所有国家
+		    limit = { exists = yes }
+			set_country_flag = statistic_exclude
+			clr_country_flag = statistic_top
+		}
+		every_country = { #calculation
+			limit = {
+				exists = yes 
+   				check_variable = { which = country_total_pop	value = 5 }
+				OR = {
+					has_country_modifier = country_development_1
+					has_country_modifier = country_development_2
+					has_country_modifier = country_development_3
+					has_country_modifier = country_development_4
+					has_country_modifier = country_development_5
+					has_country_modifier = country_development_6
+					has_country_modifier = country_development_7
+					has_country_modifier = country_development_8
+					ai = no
+				}
+			}
+			# Initialization
+			clr_country_flag = statistic_top
+			clr_country_flag = statistic_exclude
+			capital_scope = { save_event_target_as = cap_province }
+
+			# log = "|P|statisticsevents.6 | Country = 						[This.GetName]| |P|!"
+			# log = "|T|statisticsevents.6 | country_percent_urbanized = 		[This.country_percent_urbanized.GetValue]| |T|!"
+		}
+		event_target:root_cap_province = {
+			set_variable = { which = w_exit_var			value = 0 }
+			set_variable = { which = w_prev_max_var		value = 0 }
+			set_variable = { which = w_curr_max_var		value = 1 }
+			while = {
+				limit = { NOT = { check_variable = { which = w_exit_var	value = 10 } } }
+				every_country = {
+					limit = {
+						exists = yes 
+   				        check_variable = { which = country_total_pop	value = 5 }
+						check_variable = { which = country_percent_urbanized	value = 15 }
+						NOT = { has_country_flag = statistic_exclude }
+					}
+					event_target:root_cap_province = {
+						set_variable = { which = country_percent_urbanized			which = PREV }
+						set_variable = { which = w_curr_max_var		which = country_percent_urbanized }
+						if = {
+							limit = { check_variable = { which = w_curr_max_var	which = w_prev_max_var } }
+							if = { #it just werks
+								limit = { is_variable_equal = { which = w_curr_max_var which = w_prev_max_var } }
+								if = {
+									limit = { is_max_1 = yes }
+									event_target:e_urban_rank_1 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_urban_rank_1 }
+								}
+								else_if = {
+									limit = { is_max_2 = yes }
+									event_target:e_urban_rank_2 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_urban_rank_2 }
+								}
+								else_if = {
+									limit = { is_max_3 = yes }
+									event_target:e_urban_rank_3 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_urban_rank_3 }
+								}
+								else_if = {
+									limit = { is_max_4 = yes }
+									event_target:e_urban_rank_4 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_urban_rank_4 }
+								}
+								else_if = {
+									limit = { is_max_5 = yes }
+									event_target:e_urban_rank_5 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_urban_rank_5 }
+								}
+								else_if = {
+									limit = { is_max_6 = yes }
+									event_target:e_urban_rank_6 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_urban_rank_6 }
+								}
+								else_if = {
+									limit = { is_max_7 = yes }
+									event_target:e_urban_rank_7 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_urban_rank_7 }
+								}
+								else_if = {
+									limit = { is_max_8 = yes }
+									event_target:e_urban_rank_8 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_urban_rank_8 }
+								}
+								else_if = {
+									limit = { is_max_9 = yes }
+									event_target:e_urban_rank_9 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_urban_rank_9 }
+								}
+								else_if = {
+									limit = { is_max_10 = yes }
+									event_target:e_urban_rank_0 = { clr_country_flag = statistic_top }
+									PREV = { save_global_event_target_as = e_urban_rank_0 }
+								}
+								PREV = { set_country_flag = statistic_top }
+							}
+							PREV = {
+								if = {
+									limit = { has_country_flag = statistic_top }
+									# log = "|G|statisticsevents.6 | Max Country = 					[This.GetName]| |G|!"
+									# log = "|T|statisticsevents.6 | country_percent_urbanized =						[This.country_percent_urbanized.GetValue]| |T|!"
+									# log = "|T|statisticsevents.6 | country_total_pop = 		[This.country_total_pop.GetValue]| |T|!"
+									event_target:root_cap_province = { 
+										change_variable = { which = w_exit_var		value = 1 }
+										set_variable = { 	which = w_prev_max_var	value = 0 }
+									}
+									set_country_flag = statistic_exclude
+								}
+								else_if = {
+									limit = { NOT = { has_country_flag = statistic_top } }
+									set_country_flag = statistic_top
+									event_target:root_cap_province = { set_variable = { which = w_prev_max_var	which = w_curr_max_var } }
+									if = {
+										limit = { event_target:root_cap_province = { is_max_1 = yes } }
+										event_target:e_urban_rank_1 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_urban_rank_1
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_2 = yes } }
+										event_target:e_urban_rank_2 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_urban_rank_2
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_3 = yes } }
+										event_target:e_urban_rank_3 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_urban_rank_3
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_4 = yes } }
+										event_target:e_urban_rank_4 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_urban_rank_4
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_5 = yes } }
+										event_target:e_urban_rank_5 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_urban_rank_5
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_6 = yes } }
+										event_target:e_urban_rank_6 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_urban_rank_6
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_7 = yes } }
+										event_target:e_urban_rank_7 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_urban_rank_7
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_8 = yes } }
+										event_target:e_urban_rank_8 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_urban_rank_8
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_9 = yes } }
+										event_target:e_urban_rank_9 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_urban_rank_9
+									}
+									else_if = {
+										limit = { event_target:root_cap_province = { is_max_10 = yes } }
+										event_target:e_urban_rank_0 = { clr_country_flag = statistic_top }
+										save_global_event_target_as = e_urban_rank_0
+									}
+									
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		# log = "|P| TOP: |#1 = [e_urban_rank_1.GetName]| |#2 = [e_urban_rank_2.GetName]| |#3 = [e_urban_rank_3.GetName]| |#4 = [e_urban_rank_4.GetName]| |#5 = [e_urban_rank_5.GetName]| |P|!"
+		# log = "|P| TOP: |#6 = [e_urban_rank_6.GetName]| |#7 = [e_urban_rank_7.GetName]| |#8 = [e_urban_rank_8.GetName]| |#9 = [e_urban_rank_9.GetName]| |#10 = [e_urban_rank_0.GetName]| |P|!"
+		# log = "|G| Player: [Root.GetName] |G|!"
+		# log = "|T| country_percent_urbanized =						[Root.country_percent_urbanized.GetValue]| |T|!"
+		# log = "|T| country_total_pop = 		[Root.country_total_pop.GetValue]| |T|!"
+	}
+		
+	option = {
+		name = "statisticsevents.6.option.a"
+	}
+}

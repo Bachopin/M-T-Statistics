@@ -1,0 +1,381 @@
+###- M&T Statistics v1.1 -####
+
+namespace = otherstatisticsevents
+
+######################################
+######## 排行榜汇总显示事件 ##########
+######################################
+
+country_event = { #[otherstatisticsevents.1] Calculate actual yearly income
+	id = otherstatisticsevents.1
+	title = otherstatisticsevents.1.t
+	desc = otherstatisticsevents.1.d
+	picture = ADVISOR_eventPicture
+	
+	is_triggered_only = yes
+	hidden = no
+	
+	immediate = {
+	}
+	
+	option = {
+		name = "otherstatisticsevents.1.option.aa"
+        if = {
+		  limit = { has_global_flag = ipc_statistics_is_on }
+		  custom_tooltip = ipc_statistics_display
+        }			
+        if = {
+		  limit = { NOT = { has_global_flag = ipc_statistics_is_on } }
+		  custom_tooltip = ipc_statistics_undisplay
+        }
+		hidden_effect = {
+##			country_event = { id = statisticsevents.1 }
+##		    country_event = { id = otherstatisticsevents.1 }	
+		}
+		ai_chance = {
+			factor = 0
+		}	
+	}
+	
+	option = {
+		name = "otherstatisticsevents.1.option.a"
+		if = {
+                limit = { has_global_flag = urban_statistics_is_ready }
+				custom_tooltip = ctp_statistics_display
+			}else = {
+			    custom_tooltip = statistics_wait
+            }
+		hidden_effect = {
+##			country_event = { id = statisticsevents.2 }
+##		    country_event = { id = otherstatisticsevents.1 }	
+		}
+		ai_chance = {
+			factor = 0
+		}	
+	}
+		option = {
+		name = "otherstatisticsevents.1.option.b"
+		if = {
+                limit = { has_global_flag = urban_statistics_is_ready }
+				custom_tooltip = urban_statistics_display
+			}else = {
+			    custom_tooltip = statistics_wait
+            }
+		hidden_effect = {
+##			country_event = { id = statisticsevents.6 }
+##		    country_event = { id = otherstatisticsevents.1 }	
+		}
+		ai_chance = {
+			factor = 0
+		}
+	}
+		option = {
+		name = "otherstatisticsevents.1.option.c"
+		if = {
+                limit = { has_global_flag = edu_statistics_is_ready }
+				custom_tooltip = edu_statistics_display
+			}else = {
+			    custom_tooltip = statistics_wait
+            }
+		hidden_effect = {
+##			country_event = { id = statisticsevents.3 }
+##		    country_event = { id = otherstatisticsevents.1 }	
+		}
+		ai_chance = {
+			factor = 0
+		}
+	}
+		option = {
+		name = "otherstatisticsevents.1.option.d"
+		if = {
+                limit = { has_global_flag = court_statistics_is_ready }
+				custom_tooltip = court_statistics_display
+			}else = {
+			    custom_tooltip = statistics_wait
+            }
+		hidden_effect = {
+##			country_event = { id = statisticsevents.4 }
+##		    country_event = { id = otherstatisticsevents.1 }	
+		}
+		ai_chance = {
+			factor = 0
+		}
+	}
+		option = {
+		name = "otherstatisticsevents.1.option.e"
+		if = {
+                limit = { has_global_flag = art_statistics_is_ready }
+				custom_tooltip = art_statistics_display
+			}else = {
+			    custom_tooltip = statistics_wait
+            }
+		hidden_effect = {
+##			country_event = { id = statisticsevents.5 }
+##		    country_event = { id = otherstatisticsevents.1 }	
+		}
+		ai_chance = {
+			factor = 0
+		}
+	}
+		option = {
+		name = "otherstatisticsevents.1.option.f"
+		highlight = yes
+		ai_chance = { factor = 100 }		
+	}
+}
+
+
+######################################
+## 选择自开启排行榜后的自动刷新时长 ##
+######################################
+
+country_event = { #[otherstatisticsevents.2] Calculate actual yearly income
+	id = otherstatisticsevents.2
+	title = otherstatisticsevents.2.t
+	desc = otherstatisticsevents.2.d
+	picture = ADVISOR_eventPicture
+	
+	is_triggered_only = yes
+	hidden = no
+	
+	immediate = {
+	}
+	
+	option = {
+		name = "otherstatisticsevents.2.option.a"
+		hidden_effect = {
+		     set_global_flag = statistics_is_on
+			 set_global_flag = statistics_is_show
+			 AAA = {
+             set_variable = { which = statistics_pulse_cooldown	value = 6 }
+			 set_variable = { which = ipc_statistics_cooldown value = 1 }
+			 set_variable = { which = statistics_pulse_counter	value = 1 }
+			 }
+			 country_event = { id = otherstatisticsevents.4 }
+								
+		}
+		ai_chance = {
+			factor = 0
+		}	
+	}
+	
+	option = {
+		name = "otherstatisticsevents.2.option.b"
+		hidden_effect = {
+		     set_global_flag = statistics_is_on
+			 set_global_flag = statistics_is_show
+			 AAA = {
+             set_variable = { which = statistics_pulse_cooldown	value = 11 }
+			 set_variable = { which = ipc_statistics_cooldown value = 1 }
+			 set_variable = { which = statistics_pulse_counter	value = 1 }
+			 }
+			 country_event = { id = otherstatisticsevents.4 }
+		}
+		ai_chance = {
+			factor = 0
+		}
+	}
+	option = {
+		name = "otherstatisticsevents.2.option.c"
+		hidden_effect = {
+		     set_global_flag = statistics_is_on
+			 set_global_flag = statistics_is_show
+			 AAA = {
+             set_variable = { which = statistics_pulse_cooldown	value = 26 }
+			 set_variable = { which = ipc_statistics_cooldown value = 1 }
+			 set_variable = { which = statistics_pulse_counter	value = 1 }
+			 }
+			 country_event = { id = otherstatisticsevents.4 }
+		}
+		ai_chance = {
+			factor = 0
+		}
+	}
+	option = {
+		name = "otherstatisticsevents.2.option.d"
+		hidden_effect = {
+		     set_global_flag = statistics_is_on
+			 set_global_flag = statistics_is_show
+			 AAA = {
+             set_variable = { which = statistics_pulse_cooldown	value = 51 }
+			 set_variable = { which = ipc_statistics_cooldown value = 1 }
+			 set_variable = { which = statistics_pulse_counter	value = 1 }
+			 }
+			 country_event = { id = otherstatisticsevents.4 }
+		}
+		ai_chance = {
+			factor = 0
+		}
+	}
+	option = {
+		name = "otherstatisticsevents.2.option.e"
+		hidden_effect = {
+		     set_global_flag = statistics_is_on
+			 set_global_flag = statistics_is_show
+			 AAA = {
+             set_variable = { which = statistics_pulse_cooldown	value = 501 }
+			 set_variable = { which = ipc_statistics_cooldown value = 1 }
+			 set_variable = { which = statistics_pulse_counter	value = 1 }
+			 }
+			 country_event = { id = otherstatisticsevents.4 }
+		}
+		ai_chance = {
+			factor = 0
+		}
+	}
+	option = {
+		name = "otherstatisticsevents.2.option.f"
+		highlight = yes
+		ai_chance = { factor = 100 }		
+	}
+}
+
+######################################
+##########显示人均收入 ###############
+######################################
+
+##        country_event = { #[otherstatisticsevents.3] ipc_statistics flag
+##        	id = otherstatisticsevents.3
+##        	title = otherstatisticsevents.3.t
+##        	desc = otherstatisticsevents.3.d
+##        	picture = ADVISOR_eventPicture
+##        	
+##        	is_triggered_only = yes
+##        	hidden = yes
+##        	
+##        	immediate = {
+##        	    set_global_flag = ipc_statistics_is_on
+##        	}
+##        	
+##        	option = {
+##        		name = "otherstatisticsevents.3.option.a"	
+##        	}
+##        }
+
+##########################################
+###########检测指标是否就绪 ##############
+##########################################
+
+country_event = { #[otherstatisticsevents.4] ipc_statistics flag
+	id = otherstatisticsevents.4
+	title = otherstatisticsevents.4.t
+	desc = otherstatisticsevents.4.d
+	picture = ADVISOR_eventPicture
+	
+	is_triggered_only = yes
+	hidden = yes
+	############## 校验是否每个国家都有相应数值
+	immediate = {
+		    if = {  limit = { NOT = { has_global_flag = urban_statistics_is_ready } }
+			        set_global_flag = urban_statistics_is_ready
+					every_country = {
+			        limit = {
+					    exists = yes
+			            NOT = { has_country_modifier = country_development_1 }
+			    	    NOT = { has_country_modifier = country_development_2 }
+			    	    NOT = { has_country_modifier = country_development_3 }
+			    	    NOT = { has_country_modifier = country_development_4 }
+			    	    NOT = { has_country_modifier = country_development_5 }
+			    	    NOT = { has_country_modifier = country_development_6 }
+			    	    NOT = { has_country_modifier = country_development_7 }
+			    	    NOT = { has_country_modifier = country_development_8 }
+			    		}
+			    	clr_global_flag = urban_statistics_is_ready
+			        }
+                    if = {
+				        limit = { has_global_flag = urban_statistics_is_ready }
+				    	country_event = { id = statisticsevents.6 }
+						country_event = { id = statisticsevents.2 }
+                    }					
+		    }
+			if = { limit = { NOT = { has_global_flag = edu_statistics_is_ready } has_global_flag = urban_statistics_is_ready }
+			    set_global_flag = edu_statistics_is_ready
+			    every_country = {
+				    limit = { 
+                        exists = yes
+						NOT = { has_country_modifier = education_level_illiterate  }
+                        NOT = { has_country_modifier = education_level_mediocre    }
+                        NOT = { has_country_modifier = education_level_poor        }
+                        NOT = { has_country_modifier = education_level_average     }
+                        NOT = { has_country_modifier = education_level_fair        }
+                        NOT = { has_country_modifier = education_level_good        }
+                        NOT = { has_country_modifier = education_level_high        }
+                        NOT = { has_country_modifier = education_level_exceptional }
+                        NOT = { has_country_modifier = education_level_enlightened }
+                        }
+                    clr_global_flag = edu_statistics_is_ready						
+                }
+                if = {
+				    limit = { has_global_flag = edu_statistics_is_ready }
+					country_event = { id = statisticsevents.3 }
+                }				
+			}
+			if = { limit = { NOT = { has_global_flag = court_statistics_is_ready } has_global_flag = edu_statistics_is_ready }
+                set_global_flag = court_statistics_is_ready			
+			    every_country = {
+			        limit = {
+			            exists = yes
+						NOT = { has_country_modifier = court_level_1 }
+			    	    NOT = { has_country_modifier = court_level_2 }
+			    	    NOT = { has_country_modifier = court_level_3 }
+			    	    NOT = { has_country_modifier = court_level_4 }
+			    	    NOT = { has_country_modifier = court_level_5 }
+			    	    NOT = { has_country_modifier = court_level_6 }
+			    		}
+			    	clr_global_flag = court_statistics_is_ready
+			    }
+                if = {
+				    limit = { has_global_flag = court_statistics_is_ready }
+					country_event = { id = statisticsevents.4 }
+                }			    
+			}
+			if = { limit = { NOT = { has_global_flag = art_statistics_is_ready } has_global_flag = court_statistics_is_ready }
+#               set_global_flag = art_statistics_is_ready			
+#               every_country = {
+#                   limit = {
+#               	    exists = yes
+#                       check_variable = { which = country_total_pop	value = 5 }
+#                       NOT = { has_country_modifier = art_level_1 }
+#                       NOT = { has_country_modifier = art_level_2 }
+#                       NOT = { has_country_modifier = art_level_3 }
+#                       NOT = { has_country_modifier = art_level_4 }
+#                       NOT = { has_country_modifier = art_level_5 }						
+#                       }
+#                   clr_global_flag = art_statistics_is_ready						
+#               }
+#               if = {
+#                   limit = { 
+#               	        has_global_flag = urban_statistics_is_ready 
+#               			has_global_flag = edu_statistics_is_ready 
+#               			has_global_flag = court_statistics_is_ready						
+#               			}
+#               	set_global_flag = art_statistics_is_ready
+#                   country_event = { id = statistics_calculateevents.2 }
+#               	country_event = { id = statisticsevents.5 days = 1 }
+#               }
+				
+				if = { 
+				    limit = { 
+					    has_global_flag = statistics_artpower_caculated 
+					    AAA = {
+                            OR = {
+							    has_country_modifier = art_level_1
+							    has_country_modifier = art_level_2
+							    has_country_modifier = art_level_3
+							    has_country_modifier = art_level_4
+							    has_country_modifier = art_level_5  							
+                            }							
+					    } 
+					}
+                country_event = { id = statisticsevents.5 days = 1 }
+				set_global_flag = art_statistics_is_ready
+                }else = {
+				country_event = { id = statistics_calculateevents.2 }
+                }				
+			}
+	}
+	
+	option = {
+		name = "otherstatisticsevents.4.option.a"	
+	}
+}

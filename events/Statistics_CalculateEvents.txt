@@ -1,0 +1,117 @@
+#-----------------------------#
+###- M&T Statistics v1.1 -####
+#-----------------------------#
+
+namespace = statistics_calculateevents
+
+######################################
+##########实际收入统计 ###############
+######################################
+
+country_event = { #[statistics_calculateevents.1] Calculate actual yearly income
+	id = statistics_calculateevents.1
+	title = statistics_calculateevents.1.t
+	desc = statistics_calculateevents.1.d
+	picture = ADVISOR_eventPicture
+	
+	hidden = yes
+	is_triggered_only = yes
+	
+	immediate = {
+		every_country = {
+			save_event_target_as = e_se3_parent
+			if = {
+				limit = { NOT = { has_country_flag = init_year_income } }
+				capital_scope = {
+					set_variable = { which = actual_yearly_income	value = 0 }
+					set_variable = { which = averaged_this_year		value = 0 }
+				}
+				set_country_flag = init_year_income
+			}
+			capital_scope = { #Stored in capital
+				set_variable = { 		which = temp_month_income	value = 0 }
+				export_to_variable = {	which = temp_month_income	value = monthly_income		who = event_target:e_se3_parent } #For loc export as well
+				change_variable = { 	which = averaged_this_year	which = temp_month_income }
+				if = {
+					limit = { is_month_may = yes }
+					set_variable = { which = actual_yearly_income	which = averaged_this_year }
+					set_variable = { which = averaged_this_year		value = 0 }
+					# log = "|T|statistics_calculateevents.1 Country = [e_se3_parent.GetName] Capital = [This.GetName] actual_yearly_income = [This.actual_yearly_income.GetValue] |T|!"
+				}
+			}
+		}
+	}
+	
+	option = {
+		name = "statistics_calculateevents.1.option.a"
+	}
+}
+
+######################################
+##########计算艺术力量 ###############
+######################################
+
+country_event = { #[statistics_calculateevents.2] ipc_statistics flag
+	id = statistics_calculateevents.2
+	title = statistics_calculateevents.2.t
+	desc = statistics_calculateevents.2.d
+	picture = ADVISOR_eventPicture
+	
+	is_triggered_only = yes
+	hidden = yes
+	
+	immediate = {
+	    every_country = {
+			limit = {
+				exists = yes
+			}
+			set_variable = { which = development_level			value = 0 } ### The value of a country vs the development
+			set_variable = { which = current_total_dev			value = 0 } ### current total dev of country
+			set_variable = { which = total_province_size		value = 0 } ### provsize of all provinces owned by country
+			set_variable = { which = art_power		value = 0 } ### art power of all provinces in the country
+			
+			#run through all provinces, adding up province size
+			set_variable = { which = total_province_size value = 0 }
+		}
+		every_province = {
+			limit = {
+				is_city = yes
+			}
+			set_variable = { which = current_total_dev which = devPointTotal }
+			set_variable = { which = total_province_size which = prov_size }
+			if = {
+				limit = {
+					check_variable = { which = total_province_size value = 3000 }
+				}
+				set_variable = { which = total_province_size value = 3000 }
+			}
+			else_if = {
+				limit = {
+					NOT = { check_variable = { which = total_province_size value = 30 } } # London province
+				}
+				set_variable = { which = total_province_size value = 30 }
+			}
+			owner = {
+				change_variable = { which = total_province_size which = PREV }
+				change_variable = { which = art_power which = PREV }
+				change_variable = { which = current_total_dev which = PREV }
+			}
+			
+			set_variable = { which = current_total_dev value = 0 }
+			set_variable = { which = total_province_size value = 0 }
+		}
+		every_country = {
+			limit = {
+				exists = yes
+			}
+			set_variable = { which = art_power_disp which = art_power }
+			multiply_variable = { which = art_power_disp value = 0.01 }
+			multiply_variable = { which = art_power_disp value = 100 }
+		}
+	    set_global_flag = statistics_artpower_caculated
+	}
+	
+	option = {
+		name = "statistics_calculateevents.2.option.a"	
+	}
+}

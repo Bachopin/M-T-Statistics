@@ -1,0 +1,342 @@
+###- M&T Statistics v1.1 -####
+
+country_decisions = {
+
+### 开启/关闭排行榜
+
+    open_statistics = {
+		potential = {
+			NOT = { has_global_flag = statistics_is_on }
+		}
+		allow = {
+		   	is_year = 1357
+		}
+		effect = {
+		    custom_tooltip = statistics_open
+		    hidden_effect = {
+                if = { 
+			         limit = { has_global_flag = ipc_statistics_is_on }
+			         clr_global_flag = ipc_statistics_is_on 
+			    }
+					country_event = { id = otherstatisticsevents.2 }
+			}
+		}
+		ai_will_do = {
+			factor = 0
+		}	
+	}
+	
+	close_statistics = {
+		potential = {
+			has_global_flag = statistics_is_on
+			has_global_flag = statistics_is_show
+		}
+		allow = {
+		}
+		effect = {
+		    custom_tooltip = statistics_close
+		    hidden_effect = {
+				clr_global_flag = ipc_statistics_is_on
+				clr_global_flag = statistics_artpower_caculated
+				clr_global_flag = urban_statistics_is_ready 
+				clr_global_flag = edu_statistics_is_ready   
+				clr_global_flag = court_statistics_is_ready 
+				clr_global_flag = art_statistics_is_ready   
+				clr_global_flag = statistics_is_on
+				clr_global_flag = statistics_is_show
+			}
+		}	
+		ai_will_do = {
+			factor = 0
+		}	
+	}
+	
+### 显示/隐藏排行榜决议
+
+    show_statistics = {
+		potential = {
+			has_global_flag = statistics_is_on 
+			NOT = { has_global_flag = statistics_is_show }
+		}
+		allow = {
+		   	is_year = 1357
+		}
+		effect = {
+		    custom_tooltip = show_all_statistics
+		    hidden_effect = {
+                
+				set_global_flag = statistics_is_show
+				
+			}
+		}
+		ai_will_do = {
+			factor = 0
+		}	
+	}
+	
+    hide_statistics = {
+		potential = {
+			has_global_flag = statistics_is_on 
+			has_global_flag = statistics_is_show
+		}
+		allow = {
+		   	is_year = 1357
+		}
+		effect = {
+		    custom_tooltip = hide_all_statistics
+		    hidden_effect = {
+                
+				clr_global_flag = statistics_is_show
+			}
+		}
+		ai_will_do = {
+			factor = 0
+		}	
+	}
+	
+### 人均排行
+
+	display_ipc_statistics = {
+	    
+		potential = {
+			is_year = 1357
+			has_global_flag = statistics_is_on
+			has_global_flag = statistics_is_show
+		}
+		allow = {
+			is_year = 1357
+		}
+		effect = {
+            if = {
+			     limit = { has_global_flag = ipc_statistics_is_on }
+				 custom_tooltip = ipc_statistics_display
+            }			
+            if = {
+			     limit = { NOT = { has_global_flag = ipc_statistics_is_on } }
+				 custom_tooltip = ipc_statistics_undisplay
+            }
+			
+			hidden_effect = {
+				if = {
+			         limit = { has_global_flag = ipc_statistics_is_on }
+			    	 country_event = { id = statisticsevents.1 }
+				}			
+			}
+		}
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	
+### 人口排行
+	
+	display_ctp_statistics = {
+	    
+		potential = {
+			is_year = 1357
+			has_global_flag = statistics_is_on
+			has_global_flag = statistics_is_show
+		}
+		allow = {
+		}
+		effect = {			
+            if = {
+                limit = { has_global_flag = urban_statistics_is_ready }
+				custom_tooltip = ctp_statistics_display
+			}else = {
+			    custom_tooltip = statistics_wait
+            }			
+			hidden_effect = {
+			    if = { limit = { has_global_flag = urban_statistics_is_ready }
+				    country_event = { id = statisticsevents.2 }
+				} else = {
+				    country_event = { id = otherstatisticsevents.4 }
+				}
+			}			
+		}
+		ai_will_do = {
+			factor = 0
+		}
+	}
+
+###城市化率
+	
+	display_urban_statistics = {
+	    
+		potential = {
+			is_year = 1357
+			has_global_flag = statistics_is_on
+			has_global_flag = statistics_is_show
+		}
+		allow = {
+		}
+		effect = {
+            if = {
+                limit = { has_global_flag = urban_statistics_is_ready }
+				custom_tooltip = urban_statistics_display
+			}else = {
+			    custom_tooltip = statistics_wait
+            }			
+			hidden_effect = {
+			    if = { limit = { has_global_flag = urban_statistics_is_ready }
+				    country_event = { id = statisticsevents.6 }
+				} else = {
+				    country_event = { id = otherstatisticsevents.4 }
+				}
+			}
+		}
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	
+###教育程度
+
+	display_edu_statistics = {
+	    
+		potential = {
+			is_year = 1357
+			has_global_flag = statistics_is_on
+			has_global_flag = statistics_is_show
+		}
+		allow = {
+		}
+		effect = {
+            if = {
+                limit = { has_global_flag = edu_statistics_is_ready }
+				custom_tooltip = edu_statistics_display
+			}else = {
+			    custom_tooltip = statistics_wait
+            }			
+			hidden_effect = {
+			    if = { limit = { has_global_flag = edu_statistics_is_ready }
+				    country_event = { id = statisticsevents.3 }
+				} else = {
+				    country_event = { id = otherstatisticsevents.4 }
+				}
+			}
+		}
+		ai_will_do = {
+			factor = 0
+		}
+	}
+
+###宫廷奢华
+	
+	display_court_statistics = {
+	    
+		potential = {
+			is_year = 1357
+			has_global_flag = statistics_is_on
+			has_global_flag = statistics_is_show
+		}
+		allow = {
+		}
+		effect = {
+            if = {
+                limit = { has_global_flag = court_statistics_is_ready }
+				custom_tooltip = court_statistics_display
+			}else = {
+			    custom_tooltip = statistics_wait
+            }			
+			hidden_effect = {
+			    if = { limit = { has_global_flag = court_statistics_is_ready }
+				    country_event = { id = statisticsevents.4 }
+				} else = {
+				    country_event = { id = otherstatisticsevents.4 }
+				}
+			}
+		}
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	
+###艺术成就
+
+	display_art_statistics = {
+	    
+		potential = {
+			is_year = 1357
+			has_global_flag = statistics_is_on
+			has_global_flag = statistics_is_show
+		}
+		allow = {
+		}
+		effect = {
+            if = {
+                limit = { has_global_flag = art_statistics_is_ready }
+				custom_tooltip = art_statistics_display
+			}else = {
+			    custom_tooltip = statistics_wait
+            }			
+			hidden_effect = {
+			    if = { limit = { has_global_flag = art_statistics_is_ready }
+				    country_event = { id = statisticsevents.5 }
+				} else = {
+				    country_event = { id = otherstatisticsevents.4 }
+				}
+			}
+		}
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	
+###总榜
+
+	display_total_statistics = {
+	    
+		potential = {
+			is_year = 1357
+			has_global_flag = statistics_is_on
+			has_global_flag = statistics_is_show
+		}
+		allow = {
+		}
+		effect = {
+            if = {
+                limit = { 
+					has_global_flag = urban_statistics_is_ready
+				    has_global_flag = edu_statistics_is_ready 
+				    has_global_flag = court_statistics_is_ready
+					has_global_flag = art_statistics_is_ready 
+				}
+				custom_tooltip = total_statistics_display
+				country_event = { id = otherstatisticsevents.1 }
+			}else = {
+			    custom_tooltip = total_statistics_wait
+            }			
+			hidden_effect = {
+				if = {
+			         limit = { has_global_flag = ipc_statistics_is_on }
+			    	 country_event = { id = statisticsevents.1 }
+				}
+				if = {
+			         limit = { has_global_flag = urban_statistics_is_ready }
+			    	 country_event = { id = statisticsevents.2 }
+				}
+				if = {
+			         limit = { has_global_flag = urban_statistics_is_ready }
+			    	 country_event = { id = statisticsevents.6 }
+				}
+				if = {
+			         limit = { has_global_flag = edu_statistics_is_ready }
+			    	 country_event = { id = statisticsevents.3 }
+				}
+				if = {
+			         limit = { has_global_flag = court_statistics_is_ready }
+			    	 country_event = { id = statisticsevents.4 }
+				}
+				if = {
+			         limit = { has_global_flag = art_statistics_is_ready }
+			    	 country_event = { id = statisticsevents.5 }
+				}
+				country_event = { id = otherstatisticsevents.4 }
+			}
+		}
+		ai_will_do = {
+			factor = 0
+		}
+	}	
+}

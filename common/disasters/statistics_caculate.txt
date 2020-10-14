@@ -1,0 +1,111 @@
+#-----------------------------#
+###- M&T Statistics v1.1 -####
+#-----------------------------#
+
+###排行榜运算脚本###
+
+statistics_caculate = {
+	potential = {
+		tag = AAA
+	}
+	
+	can_start = {
+		always = yes
+	}
+	
+	can_stop = {
+		always = no
+	}
+	
+	progress = {
+		modifier = {
+			factor = 100
+			
+			always = yes
+		}
+	}
+	
+	can_end = {
+		always = no
+	}
+	
+	on_monthly = {
+	
+        ###计算实际年总收入
+		
+		if = {
+			limit = { has_global_flag = statistics_is_on }
+			country_event = { id = statistics_calculateevents.1 }
+			if = { limit = { NOT = { has_global_flag = ipc_statistics_is_on } }
+			change_variable = { which = ipc_statistics_cooldown value = 1 }
+			}
+		}
+		
+		###校验所需游戏数据是否已就绪
+		
+        if = { limit = { has_global_flag = statistics_is_on }
+				if = {
+				    limit = {
+					    OR = {
+						    NOT = { has_global_flag = urban_statistics_is_ready }
+							NOT = { has_global_flag = edu_statistics_is_ready   }
+							NOT = { has_global_flag = court_statistics_is_ready }
+							NOT = { has_global_flag = art_statistics_is_ready   }
+						}
+					}
+				    country_event = { id = otherstatisticsevents.4 days = 5 }
+				}            		
+		}	    
+		
+		#### 刷新排行榜
+		
+		if = {
+			limit = { is_month = 6 has_global_flag = statistics_is_on }
+			    ### 增加计数器值
+            	change_variable = { which = statistics_pulse_counter value = 1 }
+				
+				if = { 
+				    limit = { 
+					    check_variable = { which = statistics_pulse_counter value = 3 } 
+						has_global_flag = statistics_is_on 
+						is_year = 1358
+                        AND = {
+						    has_global_flag = urban_statistics_is_ready 
+						    has_global_flag = edu_statistics_is_ready   
+						    has_global_flag = court_statistics_is_ready 
+						    has_global_flag = art_statistics_is_ready   
+                        }						
+					}
+					#Refresh statistics
+				    country_event = { id = statisticsevents.1 }	
+					country_event = { id = statisticsevents.2 }
+					country_event = { id = statisticsevents.3 }
+					country_event = { id = statisticsevents.4 }
+					country_event = { id = statisticsevents.5 }
+					country_event = { id = statisticsevents.6 }		
+				}
+		}
+		
+        ### 循环结束后重置计数器	
+		
+		if = { 
+		    limit = {
+			     has_global_flag = statistics_is_on
+				 check_variable = { which = statistics_pulse_counter which = statistics_pulse_cooldown }			    
+		    }		
+			set_variable = { which = statistics_pulse_counter value = 1 }
+		}
+		
+		###开启排行榜13个月后显示人均收入
+		
+		if = { 
+		    limit = {
+			     has_global_flag = statistics_is_on
+				 check_variable = { which = ipc_statistics_cooldown value = 14 }			    
+		    }		
+			set_variable = { which = ipc_statistics_cooldown value = 1 }
+			set_global_flag = ipc_statistics_is_on
+			country_event = { id = statisticsevents.1 days = 3 }
+		}
+	}
+}
